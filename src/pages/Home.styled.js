@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TodayTitle = styled.h2`
+export const TodayTitleHTML = styled.h2`
   height: 110px;
 
   display: flex;
@@ -20,7 +20,6 @@ export const TodayTitle = styled.h2`
   );
 `;
 
-export const ErrorHTML = styled.p`
-  color: azure;
+export const ErrorHTML = styled.h3`
   text-align: center;
 `;

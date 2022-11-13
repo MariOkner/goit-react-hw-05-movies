@@ -2,21 +2,26 @@ import helpers from 'helpers';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Section, ErrorHTML, Title, Text } from './Reviews.styled';
+import { ErrorHTML, SectionHTML, TitleHTML, TextHTML } from './Reviews.styled';
 
-export const Reviews = () => {
+const Reviews = () => {
   const [reviews, setReviews] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     fetchReviews(id);
+
+    return () => {
+      abortController.abort();
+    };
   }, [id]);
 
-  const fetchReviews = async id => {
+  const fetchReviews = async (id, abortSignal) => {
     try {
-      const reviews = await helpers.fetchReviews(id);
-      console.log(reviews);
+      const reviews = await helpers.fetchReviews(id, abortSignal);
       setReviews(reviews);
 
       setError(null);
@@ -26,18 +31,18 @@ export const Reviews = () => {
   };
 
   return reviews && reviews.length > 0 ? (
-    <Section>
+    <SectionHTML>
       {error && <ErrorHTML>{error}</ErrorHTML>}
       {reviews.map(({ id, author, content }) => (
         <div key={id}>
-          <Title>Author: {author}</Title>
-          <Text>{content}</Text>
+          <TitleHTML>Author: {author}</TitleHTML>
+          <TextHTML>{content}</TextHTML>
         </div>
       ))}
-    </Section>
+    </SectionHTML>
   ) : (
     "We don't have any reviews for this movie."
   );
 };
 
-// export default Reviews;
+export default Reviews;

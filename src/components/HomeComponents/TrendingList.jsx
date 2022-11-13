@@ -1,26 +1,26 @@
+import NoPoster from '../../images/no_poster.jpg';
 import {
-  TrendingWraper,
   TrendingListHTML,
   TrendingItemHTML,
   Link,
-  TrendingPosterImg,
-  TrendingTitle,
+  TrendingPosterImgHTML,
+  TrendingTitleHTML,
 } from './TrendingList.styled';
 
 export const TrendingList = ({ trendings }) => {
   return (
-    <TrendingWraper>
+    <div>
       <TrendingListHTML>
         {trendings.map(({ id, title, posterURL }) => (
           <TrendingItemHTML key={id}>
             <Link to={`movies/${id}`}>
-              <TrendingPosterImg src={posterURL} alt="" />
-              <TrendingTitle>{title}</TrendingTitle>
+              <TrendingPosterImgHTML src={posterURL || NoPoster} alt="" />
+              <TrendingTitleHTML>{title}</TrendingTitleHTML>
             </Link>
           </TrendingItemHTML>
         ))}
       </TrendingListHTML>
-    </TrendingWraper>
+    </div>
   );
 };
 

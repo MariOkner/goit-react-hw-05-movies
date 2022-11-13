@@ -1,38 +1,44 @@
 import helpers from 'helpers';
+import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-// import { getMovieById } from '../helpers';
-import { BackLink } from '../components/BackLink';
+import { BackLink } from '../components/MoviesDetailsComponents/BackLink';
 import { Outlet } from 'react-router-dom';
+import NoPoster from '../images/no_poster.jpg';
 
 import {
   ErrorHTML,
-  DetailsCart,
-  DetailsContent,
-  DetailsTitle,
-  DetailsText,
-  OverviewText,
-  InfoList,
+  DetailsCartHTML,
+  DetailsContentHTML,
+  DetailsTitleHTML,
+  DetailsTextHTML,
+  OverviewTextHTML,
+  InfoListHTML,
   Link,
-  InfoTitle,
-  Item,
+  InfoTitleHTML,
+  ItemHTML,
 } from './MoviesDetails.styled';
 
-export const MoviesDetails = () => {
+const MoviesDetails = () => {
   const [details, setDetails] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
   const location = useLocation();
   const backLinkHome = location.state?.from ?? '/';
-  // console.log(location.state);
 
   useEffect(() => {
-    fetchDetails(id);
+    const abortController = new AbortController();
+
+    fetchDetails(id, abortController.signal);
+
+    return () => {
+      abortController.abort();
+    };
   }, [id]);
 
-  const fetchDetails = async id => {
+  const fetchDetails = async (id, abortSignal) => {
     try {
-      const details = await helpers.fetchDetails(id);
+      const details = await helpers.fetchDetails(id, abortSignal);
       setDetails(details);
 
       setError(null);
@@ -42,52 +48,46 @@ export const MoviesDetails = () => {
   };
 
   return (
-    <main>
+    <section>
       <BackLink to={backLinkHome}>Go back</BackLink>
       {error && <ErrorHTML>{error}</ErrorHTML>}
-
       {details && (
-        <DetailsCart>
+        <DetailsCartHTML>
           <>
-            {details.posterURL ? (
-              <img src={details.posterURL} alt="" />
-            ) : (
-              'No Poster'
-            )}
+            <img src={details.posterURL || NoPoster} alt="" />
 
-            <DetailsContent>
-              <DetailsTitle>{details.title}</DetailsTitle>
+            <DetailsContentHTML>
+              <DetailsTitleHTML>{details.title}</DetailsTitleHTML>
 
               <p>UserScore: {details.userScore.toFixed(2)}%</p>
 
-              <DetailsText>Overview</DetailsText>
-              <OverviewText>{details.overview}</OverviewText>
+              <DetailsTextHTML>Overview</DetailsTextHTML>
+              <OverviewTextHTML>{details.overview}</OverviewTextHTML>
 
-              <DetailsText>Genres</DetailsText>
+              <DetailsTextHTML>Genres</DetailsTextHTML>
               <p>{details.genres.map(genre => genre.name).join(', ')}</p>
-            </DetailsContent>
+            </DetailsContentHTML>
           </>
-        </DetailsCart>
+        </DetailsCartHTML>
       )}
-      <InfoList>
-        <InfoTitle>Additional information</InfoTitle>
-        <Item>
+      <InfoListHTML>
+        <InfoTitleHTML>Additional information</InfoTitleHTML>
+        <ItemHTML>
           <Link to="cast" state={{ from: location.state?.from ?? '/' }}>
             Cast
           </Link>
-        </Item>
-        <Item>
+        </ItemHTML>
+        <ItemHTML>
           <Link to="reviews" state={{ from: location.state?.from ?? '/' }}>
             Reviews
           </Link>
-        </Item>
-      </InfoList>
-      <Outlet />
-    </main>
+        </ItemHTML>
+      </InfoListHTML>
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
+    </section>
   );
 };
 
-// export default ProductDetails;
-
-// {details.map(({ posterMovie, titleMovie, userScore, overview, genres }) => (
-// <PosterImg src={posterMovie} alt="" /><TitleMovie>{titleMovie}</TitleMovie>))}
+export default MoviesDetails;

@@ -13,7 +13,7 @@ export const StyledLink = styled(Link)`
   text-transform: uppercase;
 `;
 
-export const Button = styled.button`
+export const ButtonHTML = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;

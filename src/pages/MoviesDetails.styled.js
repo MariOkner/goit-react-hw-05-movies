@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-export const ErrorHTML = styled.p`
-  color: azure;
+export const ErrorHTML = styled.h3`
   text-align: center;
 `;
 
-export const DetailsCart = styled.div`
+export const DetailsCartHTML = styled.div`
   display: flex;
   padding: 20px;
 `;
 
-export const DetailsContent = styled.div`
+export const DetailsContentHTML = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -19,31 +18,31 @@ export const DetailsContent = styled.div`
   margin-left: 20px;
 `;
 
-export const DetailsTitle = styled.h3`
+export const DetailsTitleHTML = styled.h3`
   font-size: 27px;
 `;
 
-export const DetailsText = styled.b`
+export const DetailsTextHTML = styled.b`
   font-size: 20px;
 `;
 
-export const OverviewText = styled.p`
+export const OverviewTextHTML = styled.p`
   margin-bottom: 50px;
   line-height: 1.5;
 `;
 
-export const InfoList = styled.ul`
+export const InfoListHTML = styled.ul`
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   /* text-decoration: none; */
   /* font-size: 20px; */
 `;
 
-export const InfoTitle = styled.h3`
+export const InfoTitleHTML = styled.h3`
   padding: 20px 0;
 `;
 
-export const Item = styled.li`
+export const ItemHTML = styled.li`
   padding-bottom: 10px;
 `;
 

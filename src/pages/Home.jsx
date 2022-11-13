@@ -1,17 +1,10 @@
 import helpers from 'helpers';
 import { useState, useEffect } from 'react';
-import { TrendingList } from '../components/TrendingList';
+import { TrendingList } from '../components/HomeComponents/TrendingList';
 
-import { TodayTitle, ErrorHTML } from './Home.styled';
+import { TodayTitleHTML, ErrorHTML } from './Home.styled';
 
-export const Home = () => {
-  // const movies = getMovies();
-  // const productName = searchParams.get('name') ?? '';
-  // const visibleTrendihg = movies.filter(movie =>
-  //   movie.name.toLowerCase().includes(productName.toLowerCase())
-  // );
-
-  // _____________
+const Home = () => {
   const [trendings, setTrendings] = useState([]);
   const [error, setError] = useState(null);
 
@@ -29,6 +22,7 @@ export const Home = () => {
     try {
       const trendings = await helpers.fetchTrending(abortSignal);
       setTrendings(trendings);
+
       setError(null);
     } catch (error) {
       setError(error.message);
@@ -36,13 +30,16 @@ export const Home = () => {
   };
 
   return (
-    <main>
-      <TodayTitle>Trending today</TodayTitle>
-      {error && <ErrorHTML>{error}</ErrorHTML>}
+    <section>
+      <TodayTitleHTML>Trending today</TodayTitleHTML>
 
-      {!error && <TrendingList trendings={trendings}></TrendingList>}
-    </main>
+      {error ? (
+        <ErrorHTML>{error}</ErrorHTML>
+      ) : (
+        <TrendingList trendings={trendings} />
+      )}
+    </section>
   );
 };
 
-// export default Home;
+export default Home;

@@ -1,58 +1,56 @@
 import helpers from 'helpers';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { MovieList } from '../components/MovieList';
-import { SearchBox } from '../components/SearchBox';
-// import { getMovies } from '../helpers';
+import { MovieList } from '../components/MoviesComponents/MovieList';
+import { SearchBox } from '../components/MoviesComponents/SearchBox';
 
-export const Movies = () => {
-  // const movies = getMovies();
-  const [query, setQuery] = useState('');
+import { ErrorHTML } from './Movies.styled';
+
+const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  // const productName = searchParams.get('name') ?? '';
 
-  // const visibleProducts = movies.filter(movie =>
-  //   movie.name.toLowerCase().includes(productName.toLowerCase())
-  // );
+  const query = searchParams.get('query') ?? '';
+
   useEffect(() => {
+    const abortController = new AbortController();
     if (!query) return;
-    fetchMovies(query);
+
+    fetchMovies(query, abortController.signal);
+
+    return () => {
+      abortController.abort();
+    };
   }, [query]);
 
-  const fetchMovies = async query => {
+  const fetchMovies = async (query, abortSignal) => {
     try {
-      const movies = await helpers.fetchMovies(query);
-      console.log(movies);
+      const movies = await helpers.fetchMovies(query, abortSignal);
+
+      if (!movies.length) {
+        throw new Error('No movies');
+      }
+
       setMovies(movies);
+      setError(null);
     } catch (error) {
       setError(error.message);
     }
   };
 
-  const handleMoviesQueryChange = query => {
-    // if (query.trim() === '') {
-    //   setQuery({ error: 'The search field is empty' });
-    //   return;
-    // }
-
-    setQuery(query);
+  const handleQueryUpdate = query => {
+    setSearchParams(query.trim() !== '' ? { query } : {});
     setMovies([]);
-    setError(null);
   };
 
-  // const updateQueryString = name => {
-  //   const nextParams = name !== '' ? { name } : {};
-  //   setSearchParams(nextParams);
-  // };
-
   return (
-    <main>
-      <SearchBox onChange={handleMoviesQueryChange} />
-      {/* <MovieList movies={visibleProducts} /> */}
-    </main>
+    <section>
+      <SearchBox query={query} onChange={handleQueryUpdate} />
+
+      {error ? <ErrorHTML>{error}</ErrorHTML> : <MovieList movies={movies} />}
+    </section>
   );
 };
 
-// export default Products;
+export default Movies;

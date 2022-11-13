@@ -18,7 +18,9 @@ const fetchTrending = async abortSignal => {
       return {
         id: id,
         title: title,
-        posterURL: `${IMG_BASE_URL}/${MOVIE_IMG_SIZE}${poster_path}`,
+        posterURL: poster_path
+          ? `${IMG_BASE_URL}/${MOVIE_IMG_SIZE}${poster_path}`
+          : null,
       };
     });
   } catch (error) {
@@ -26,26 +28,43 @@ const fetchTrending = async abortSignal => {
   }
 };
 
-const fetchMovies = async query => {
-  const urlSearch = `${MOVIES_BASE_URL}/search/movie?api_key=${MOVIES_KEY}&query=${query}&include_adult=true`;
+const fetchMovies = async (query, abortSignal) => {
+  const urlMovies = `${MOVIES_BASE_URL}/search/movie?api_key=${MOVIES_KEY}&query=${query}&include_adult=true`;
+
   try {
-    const response = await axios.get(urlSearch);
-    return response;
+    const response = await axios.get(urlMovies, {
+      signal: abortSignal,
+    });
+
+    return response.data.results.map(({ id, title, poster_path }) => {
+      return {
+        id: id,
+        title: title,
+        posterURL: poster_path
+          ? `${IMG_BASE_URL}/${MOVIE_IMG_SIZE}${poster_path}`
+          : null,
+      };
+    });
   } catch (error) {
     throw new Error('Backend error');
   }
 };
 
-const fetchDetails = async id => {
+const fetchDetails = async (id, abortSignal) => {
   const urlDetails = `${MOVIES_BASE_URL}/movie/${id}?api_key=${MOVIES_KEY}&language=en-US`;
 
   try {
-    const response = await axios.get(urlDetails);
+    const response = await axios.get(urlDetails, {
+      signal: abortSignal,
+    });
 
     const { poster_path, original_title, vote_average, overview, genres } =
       response.data;
+
     return {
-      posterURL: `${IMG_BASE_URL}/${MOVIE_IMG_SIZE}${poster_path}`,
+      posterURL: poster_path
+        ? `${IMG_BASE_URL}/${MOVIE_IMG_SIZE}${poster_path}`
+        : null,
       title: original_title,
       userScore: vote_average * 10,
       overview: overview,
@@ -56,17 +75,21 @@ const fetchDetails = async id => {
   }
 };
 
-const fetchCast = async id => {
+const fetchCast = async (id, abortSignal) => {
   const urlCast = `${MOVIES_BASE_URL}/movie/${id}/credits?api_key=${MOVIES_KEY}&language=en-US`;
   try {
-    const response = await axios.get(urlCast);
+    const response = await axios.get(urlCast, {
+      signal: abortSignal,
+    });
 
     return response.data.cast.map(({ id, name, character, profile_path }) => {
       return {
         id: id,
         name: name,
         character: character,
-        profileURL: `${IMG_BASE_URL}/${CAST_IMG_SIZE}${profile_path}`,
+        profileURL: profile_path
+          ? `${IMG_BASE_URL}/${CAST_IMG_SIZE}${profile_path}`
+          : null,
       };
     });
   } catch (error) {
@@ -74,11 +97,14 @@ const fetchCast = async id => {
   }
 };
 
-const fetchReviews = async id => {
+const fetchReviews = async (id, abortSignal) => {
   const urlReviews = `${MOVIES_BASE_URL}/movie/${id}/reviews?api_key=${MOVIES_KEY}&language=en-US`;
+
   try {
-    const response = await axios.get(urlReviews);
-    console.log(response.data.results);
+    const response = await axios.get(urlReviews, {
+      signal: abortSignal,
+    });
+
     return response.data.results.map(({ id, author, content }) => {
       return {
         id: id,
@@ -99,24 +125,6 @@ const helpers = {
   fetchReviews,
 };
 export default helpers;
-// ______________________________
-//  name: 'Sneakers 4' },
-//   { id: 'p-1', name: 'Pants 1' },const movies = [
-//   { id: 'h-1', name: 'Hoodie 1' },
-//   { id: 'h-2', name: 'Hoodie 2' },
-//   { id: 'h-3', name: 'Hoodie 3' },
-//   { id: 's-1', name: 'Sneakers 1' },
-//   { id: 's-2', name: 'Sneakers 2' },
-//   { id: 's-3', name: 'Sneakers 3' },
-//   { id: 's-4',
-//   { id: 'p-2', name: 'Pants 2' },
-//   { id: 'p-3', name: 'Pants 3' },
-// ];
 
-// export const getMovies = () => {
-//   return movies;
-// };
-
-// export const getMovieById = movieId => {
-//   return movies.find(movie => movie.id === movieId);
-// };
+// https://image.tmdb.org/t/p/w154null
+// https://image.tmdb.org/t/p/w154/m2lUTpivduEiRwyPIrdg8hcI8zq.jpg"

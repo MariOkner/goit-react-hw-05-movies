@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 import { HiSearch } from 'react-icons/hi';
 
-export const Wrapper = styled.div`
+export const BoxHTML = styled.div`
   display: inline-flex;
   align-items: center;
   position: relative;
-  margin-bottom: 16px;
-  text-transform: uppercase;
+  margin: 16px 10px 16px 0;
 `;
 
-export const TitleSearch = styled.h3`
+export const TitleSearchHTML = styled.h3`
   margin-right: 10px;
   color: orangered;
+  text-transform: uppercase;
 `;
 
 export const Input = styled.input`

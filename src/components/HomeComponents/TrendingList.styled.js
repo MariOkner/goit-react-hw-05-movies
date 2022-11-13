@@ -1,19 +1,11 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-export const TrendingWraper = styled.div`
-  /* width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap; */
-`;
-
 export const TrendingListHTML = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, auto));
   grid-gap: 15px;
 
-  /* justify-content: center; */
   padding: 0;
 
   list-style: none;
@@ -43,7 +35,7 @@ export const Link = styled(NavLink)`
   }
 `;
 
-export const TrendingPosterImg = styled.img`
+export const TrendingPosterImgHTML = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -52,7 +44,7 @@ export const TrendingPosterImg = styled.img`
   }
 `;
 
-export const TrendingTitle = styled.h3`
+export const TrendingTitleHTML = styled.h3`
   padding: 10px;
 
   white-space: normal;
